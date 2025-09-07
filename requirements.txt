@@ -1,0 +1,8 @@
+langchain
+langgraph
+streamlit
+pandas
+plotly
+dotenv
+typing
+operator
