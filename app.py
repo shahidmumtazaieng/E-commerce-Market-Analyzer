@@ -180,7 +180,7 @@ st.markdown("""
     
     /* Download button styling */
     .stDownloadButton > button {
-        background-color: var(--secondary-background-color);
+        background-color: var(--button-color);
         color: green;
         border: 1px solid var(--border-color);
         font-family: var(--font-family);
@@ -596,6 +596,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
