@@ -154,10 +154,10 @@ def process_market_data(raw_data: str, analysis_type: str, category: str, platfo
             print(f"⚠️ Extracted data is empty or invalid. Returning fallback data.")
             extracted_data = [
                 {
-                    table_fields.split(", ")[0]: f"{category} Placeholder",
+                    table_fields.split(", ")[0]: f"{category}",
                     table_fields.split(", ")[1]: 5.0 if "score" in table_fields else 1,
                     table_fields.split(", ")[2]: "Medium",
-                    table_fields.split(", ")[3]: "Medium" if "opportunity" in table_fields else "Placeholder",
+                    table_fields.split(", ")[3]: "Medium" if "opportunity" in table_fields else "",
                     table_fields.split(", ")[4]: "$0.5M" if "market_size" in table_fields else "1K/month"
                 }
             ]
@@ -451,4 +451,5 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
             "status": "❌ Analysis failed"
         }
         save_results_tool(error_result)
+
         return error_result
