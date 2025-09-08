@@ -16,8 +16,9 @@ st.markdown("""
         --primary-color: #615fff;
         --background-color: #1d293d;
         --secondary-background-color: #0f172b;
-        --border-color: #22c55e;
+        --border-color: #314158;
         --font-family: 'Space Grotesk', sans-serif;
+        --button-color: #22c55e;
     }
     
     /* Main app styling */
@@ -63,7 +64,7 @@ st.markdown("""
     
     /* Button styling */
     .stButton > button {
-        background-color: var(--primary-color);
+        background-color: var(--button-color);
         color: white;
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -595,6 +596,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
