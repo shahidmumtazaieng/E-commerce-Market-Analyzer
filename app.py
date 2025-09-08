@@ -576,11 +576,6 @@ with col1:
     <style>
     div.stButton > button:first-child {
         color: #22c55e;
-     
-    }
-
-    div.stButton > button:first-child:hover {
-        color: #22c55e;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -610,6 +605,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
