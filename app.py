@@ -5,10 +5,209 @@ from typing import Dict, Any
 import plotly.graph_objects as go
 from agents import agent_orchestrator, load_results_tool
 
-st.set_page_config(layout="wide", page_title="E-commerce Market Analyzer")
+# Custom CSS for the dark theme
+st.markdown("""
+<style>
+    @import url('https://fonts.gstatic.com/s/spacegrotesk/v21/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2');
+    
+    /* Root variables matching your theme */
+    :root {
+        --text-color: #e2e8f0;
+        --primary-color: #615fff;
+        --background-color: #1d293d;
+        --secondary-background-color: #0f172b;
+        --border-color: #314158;
+        --font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    /* Main app styling */
+    .stApp {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family: var(--font-family);
+        font-weight: 300;
+        font-size: 14px;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg, .css-1cypcdb {
+        background-color: var(--secondary-background-color);
+        border-right: 1px solid var(--border-color);
+    }
+    
+    /* Headers styling */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-family);
+        color: var(--text-color);
+        font-weight: 400;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        background: linear-gradient(45deg, var(--primary-color), #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 400;
+    }
+    
+    h3 {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background-color: var(--primary-color);
+        color: white;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-family: var(--font-family);
+        font-weight: 400;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        background-color: #7c3aed;
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(97, 95, 255, 0.3);
+    }
+    
+    /* Widget styling */
+    .stSelectbox, .stTextInput, .stRadio {
+        font-family: var(--font-family);
+    }
+    
+    .stSelectbox > div > div {
+        background-color: var(--secondary-background-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+    }
+    
+    .stTextInput > div > div > input {
+        background-color: var(--secondary-background-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        font-family: var(--font-family);
+    }
+    
+    /* Metric styling */
+    .css-1xarl3l {
+        background-color: var(--secondary-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    /* DataFrame styling */
+    .stDataFrame {
+        background-color: var(--secondary-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+    
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: var(--secondary-background-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        color: var(--text-color);
+        font-family: var(--font-family);
+        background-color: transparent;
+        border: 1px solid transparent;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 6px 6px 0 0;
+    }
+    
+    /* Success/Error/Warning styling */
+    .stSuccess, .stError, .stWarning, .stInfo {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        font-family: var(--font-family);
+    }
+    
+    .stSuccess {
+        background-color: rgba(34, 197, 94, 0.1);
+        border-color: #22c55e;
+    }
+    
+    .stError {
+        background-color: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+    }
+    
+    .stWarning {
+        background-color: rgba(245, 158, 11, 0.1);
+        border-color: #f59e0b;
+    }
+    
+    .stInfo {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-color: #3b82f6;
+    }
+    
+    /* Progress bar styling */
+    .stProgress .css-1cpxqw2 {
+        background-color: var(--secondary-background-color);
+        border-radius: 8px;
+    }
+    
+    .stProgress .css-1cpxqw2 .css-1eynrej {
+        background-color: var(--primary-color);
+        border-radius: 8px;
+    }
+    
+    /* Container styling */
+    .css-1kyxreq {
+        background-color: var(--secondary-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    /* Download button styling */
+    .stDownloadButton > button {
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        font-family: var(--font-family);
+    }
+    
+    .stDownloadButton > button:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    /* Custom emoji styling for better visibility */
+    .emoji {
+        filter: brightness(1.2);
+    }
+</style>
+""", unsafe_allow_html=True)
 
-st.title("🛍️ E-commerce Market Analyzer")
-st.markdown("Discover **real-time market gaps, trends, and high-selling products** using Tavily and Gemini.")
+st.set_page_config(layout="wide", page_title="E-commerce Market Analyzer", page_icon="🛍️")
+
+# Custom title with enhanced styling
+st.markdown("""
+    <h1 style="text-align: center; margin-bottom: 0.5rem;">
+        🛍️ E-commerce Market Analyzer
+    </h1>
+    <p style="text-align: center; color: #94a3b8; font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; font-size: 1.1rem;">
+        Discover <strong style="color: #615fff;">real-time market gaps, trends, and high-selling products</strong> using Tavily and Gemini.
+    </p>
+""", unsafe_allow_html=True)
 
 # Initialize session state
 if "analysis_triggered" not in st.session_state:
@@ -16,38 +215,44 @@ if "analysis_triggered" not in st.session_state:
 if "result" not in st.session_state:
     st.session_state.result = None
 
-# Sidebar configuration
+# Enhanced sidebar with custom styling
 with st.sidebar:
-    st.header("Configuration")
+    st.markdown("""
+        <h2 style="color: #615fff; border-bottom: 2px solid #314158; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+            ⚙️ Configuration
+        </h2>
+    """, unsafe_allow_html=True)
+    
     platform = st.selectbox(
-        "Platform",
+        "🏪 Platform",
         ["Amazon", "eBay", "Walmart"],
         help="Select the e-commerce platform to analyze."
     )
     country = st.selectbox(
-        "Country",
+        "🌍 Country",
         ["US", "UK", "DE", "JP"],
         help="Choose the country for market analysis."
     )
     category = st.text_input(
-        "Product Category/Keywords",
+        "🏷️ Product Category/Keywords",
         "smart home devices",
         help="Enter product category or keywords (e.g., 'smart home devices')."
     )
     analysis_type = st.radio(
-        "Analysis Type",
+        "📊 Analysis Type",
         ["Market Gap", "Trending Products", "High Selling Products", "Competitor Analysis"],
         help="Select the type of analysis to perform."
     )
     time_range = st.select_slider(
-        "Time Range",
+        "⏰ Time Range",
         options=["Last Week", "Last Month", "Last 3 Months", "Last 6 Months"],
         value="Last Month",
         help="Choose the time frame for the analysis."
     )
 
-    # Analyze button
-    if st.button("🔍 Analyze Market", type="primary"):
+    # Enhanced analyze button
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔍 Analyze Market", type="primary", use_container_width=True):
         st.session_state.analysis_triggered = True
         st.session_state.params = {
             "platform": platform,
@@ -61,26 +266,31 @@ with st.sidebar:
 if st.session_state.analysis_triggered:
     params = st.session_state.params
     
-    # Display analysis parameters
-    st.subheader(f"🔎 Analyzing: {params['category']}")
+    # Enhanced analysis parameters display
+    st.markdown(f"""
+        <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+            <h3 style="margin-bottom: 1rem; color: #615fff;">🔎 Analyzing: {params['category']}</h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Platform", params['platform'])
+        st.metric("🏪 Platform", params['platform'])
     with col2:
-        st.metric("Country", params['country'])
+        st.metric("🌍 Country", params['country'])
     with col3:
-        st.metric("Analysis Type", params['analysis_type'])
+        st.metric("📊 Analysis Type", params['analysis_type'])
     with col4:
-        st.metric("Time Range", params['time_range'])
+        st.metric("⏰ Time Range", params['time_range'])
     
-    # Progress indicator
+    # Enhanced progress indicator
     progress_bar = st.progress(0)
     status_text = st.empty()
     
     try:
-        # Update progress
+        # Update progress with custom styling
         progress_bar.progress(20)
-        status_text.text("🔍 Searching for market data...")
+        status_text.markdown("🔍 **Searching for market data...**")
         
         # Create query for the agent
         user_query = (
@@ -90,19 +300,19 @@ if st.session_state.analysis_triggered:
         )
         
         progress_bar.progress(40)
-        status_text.text("🤖 Processing with AI agents...")
+        status_text.markdown("🤖 **Processing with AI agents...**")
         
         # Run the analysis
         result = agent_orchestrator({"question": user_query})
         
         progress_bar.progress(80)
-        status_text.text("📊 Generating visualizations...")
+        status_text.markdown("📊 **Generating visualizations...**")
         
         # Store results
         st.session_state.result = result
         
         progress_bar.progress(100)
-        status_text.text("✅ Analysis complete!")
+        status_text.markdown("✅ **Analysis complete!**")
         
         # Clear progress indicators
         progress_bar.empty()
@@ -118,30 +328,51 @@ if st.session_state.analysis_triggered:
     finally:
         st.session_state.analysis_triggered = False
 
-# Display results if available
+# Enhanced results display
 if st.session_state.result:
     result = st.session_state.result
     
     st.markdown("---")
     
-    # Key Insights Section
-    st.header("💡 Key Insights")
+    # Enhanced Key Insights Section
+    st.markdown("""
+        <h2 style="color: #615fff; border-left: 4px solid #615fff; padding-left: 1rem; margin-bottom: 1rem;">
+            💡 Key Insights
+        </h2>
+    """, unsafe_allow_html=True)
+    
     if result.get("summary"):
-        st.markdown(f"**Analysis Summary:**")
-        st.markdown(result["summary"])
+        st.markdown(f"""
+            <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                <strong style="color: #615fff;">Analysis Summary:</strong><br>
+                <span style="line-height: 1.6;">{result["summary"]}</span>
+            </div>
+        """, unsafe_allow_html=True)
     else:
         st.info("No summary insights available.")
     
-    # Create tabs for different sections
+    # Enhanced tabs with custom styling
     tab1, tab2, tab3, tab4 = st.tabs(["📊 Visualizations", "📋 Data Tables", "🚀 Recommendations", "📥 Export"])
     
     with tab1:
-        st.subheader("📊 Market Visualizations")
+        st.markdown("""
+            <h3 style="color: #615fff; margin-bottom: 1rem;">📊 Market Visualizations</h3>
+        """, unsafe_allow_html=True)
+        
         if result.get("charts") and len(result["charts"]) > 0:
             for idx, chart_json in enumerate(result["charts"]):
                 try:
-                    # Load Plotly chart from JSON
+                    # Load Plotly chart from JSON with enhanced styling
                     fig = go.Figure(json.loads(chart_json))
+                    fig.update_layout(
+                        plot_bgcolor='#1d293d',
+                        paper_bgcolor='#0f172b',
+                        font_color='#e2e8f0',
+                        font_family='Space Grotesk',
+                        title_font_size=16,
+                        title_font_color='#615fff'
+                    )
+                    
                     # Customize caption based on analysis type
                     analysis_type = st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')
                     if analysis_type == "Market Gap":
@@ -154,12 +385,13 @@ if st.session_state.result:
                         caption = f"Chart {idx + 1}: Competitor Ratings for {st.session_state.get('params', {}).get('category', 'Products')}"
                     else:
                         caption = f"Chart {idx + 1}: Market Analysis Visualization"
+                    
                     st.plotly_chart(
                         fig,
                         use_container_width=True,
                         config={'displayModeBar': True, 'staticPlot': False},
-                        caption=caption
                     )
+                    st.caption(caption)
                 except Exception as e:
                     st.warning(f"⚠️ Could not display chart {idx + 1}: {str(e)}")
         else:
@@ -167,10 +399,18 @@ if st.session_state.result:
             st.markdown("*Charts will be generated based on available market data. Try refining your query.*")
     
     with tab2:
-        st.subheader("📋 Detailed Data Tables")
+        st.markdown("""
+            <h3 style="color: #615fff; margin-bottom: 1rem;">📋 Detailed Data Tables</h3>
+        """, unsafe_allow_html=True)
+        
         if result.get("tables") and len(result["tables"]) > 0:
             for idx, table_data in enumerate(result["tables"]):
-                st.markdown(f"**Table {idx + 1}: {st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')}**")
+                st.markdown(f"""
+                    <h4 style="color: #94a3b8; margin-bottom: 0.5rem;">
+                        Table {idx + 1}: {st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')}
+                    </h4>
+                """, unsafe_allow_html=True)
+                
                 try:
                     if isinstance(table_data, list) and len(table_data) > 0:
                         df = pd.DataFrame(table_data)
@@ -184,7 +424,8 @@ if st.session_state.result:
                             df.columns = ["Product", "Sales Rank", "Revenue", "Rating", "Reviews"]
                         elif analysis_type == "Competitor Analysis":
                             df.columns = ["Competitor", "Market Share", "Strength", "Weakness", "Rating"]
-                        # Style numeric columns
+                        
+                        # Enhanced styling for numeric columns
                         numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
                         styled_df = df.style.highlight_max(axis=0, subset=numeric_cols).format(precision=2, subset=numeric_cols)
                         st.dataframe(styled_df, use_container_width=True)
@@ -198,20 +439,29 @@ if st.session_state.result:
             st.markdown("*Ensure sufficient data is available from the search query.*")
     
     with tab3:
-        st.subheader("🚀 Strategic Recommendations")
+        st.markdown("""
+            <h3 style="color: #615fff; margin-bottom: 1rem;">🚀 Strategic Recommendations</h3>
+        """, unsafe_allow_html=True)
+        
         if result.get("recommendations"):
-            st.markdown("**Actionable Insights:**")
-            st.markdown(result["recommendations"])
+            st.markdown(f"""
+                <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1.5rem;">
+                    <strong style="color: #615fff;">Actionable Insights:</strong><br>
+                    <span style="line-height: 1.6;">{result["recommendations"]}</span>
+                </div>
+            """, unsafe_allow_html=True)
         else:
             st.info("No specific recommendations generated.")
     
     with tab4:
-        st.subheader("📥 Export & Save Results")
+        st.markdown("""
+            <h3 style="color: #615fff; margin-bottom: 1rem;">📥 Export & Save Results</h3>
+        """, unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("💾 Save Results", help="Save current analysis results"):
+            if st.button("💾 Save Results", help="Save current analysis results", use_container_width=True):
                 try:
                     save_results_tool(result)
                     st.success("✅ Results saved successfully!")
@@ -219,7 +469,7 @@ if st.session_state.result:
                     st.error(f"❌ Error saving results: {str(e)}")
         
         with col2:
-            if st.button("📂 Load Previous Results", help="Load last saved analysis"):
+            if st.button("📂 Load Previous Results", help="Load last saved analysis", use_container_width=True):
                 try:
                     saved_result = load_results_tool()
                     if saved_result and saved_result.get("summary"):
@@ -231,65 +481,83 @@ if st.session_state.result:
                 except Exception as e:
                     st.error(f"❌ Error loading results: {str(e)}")
         
-        # Download JSON
-        if result.get("summary"):
-            result_json = json.dumps(result, indent=2, ensure_ascii=False)
-            st.download_button(
-                label="⬇️ Download Results (JSON)",
-                data=result_json,
-                file_name=f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{st.session_state.get('params', {}).get('platform', 'unknown')}.json",
-                mime="application/json",
-                help="Download analysis results as JSON file"
-            )
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        # Download Table as CSV
-        if result.get("tables") and len(result["tables"]) > 0:
-            df = pd.DataFrame(result["tables"][0])
-            # Rename columns for export
-            analysis_type = st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')
-            if analysis_type == "Market Gap":
-                df.columns = ["Product", "Demand Score", "Competition", "Opportunity", "Market Size"]
-            elif analysis_type == "Trending Products":
-                df.columns = ["Product", "Trend Score", "Growth", "Interest Level", "Search Volume"]
-            elif analysis_type == "High Selling Products":
-                df.columns = ["Product", "Sales Rank", "Revenue", "Rating", "Reviews"]
-            elif analysis_type == "Competitor Analysis":
-                df.columns = ["Competitor", "Market Share", "Strength", "Weakness", "Rating"]
-            csv = df.to_csv(index=False)
-            st.download_button(
-                label="⬇️ Download Table (CSV)",
-                data=csv,
-                file_name=f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.csv",
-                mime="text/csv",
-                help="Download data table as CSV file"
-            )
+        # Enhanced download buttons
+        col1, col2, col3 = st.columns(3)
         
-        # Download Chart as PNG (if available)
-        if result.get("charts") and len(result["charts"]) > 0:
-            try:
-                fig = go.Figure(json.loads(result["charts"][0]))
-                img_bytes = fig.to_image(format="png")
+        with col1:
+            # Download JSON
+            if result.get("summary"):
+                result_json = json.dumps(result, indent=2, ensure_ascii=False)
                 st.download_button(
-                    label="⬇️ Download Chart (PNG)",
-                    data=img_bytes,
-                    file_name=f"market_analysis_chart_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.png",
-                    mime="image/png",
-                    help="Download chart as PNG image"
+                    label="⬇️ Download Results (JSON)",
+                    data=result_json,
+                    file_name=f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{st.session_state.get('params', {}).get('platform', 'unknown')}.json",
+                    mime="application/json",
+                    help="Download analysis results as JSON file",
+                    use_container_width=True
                 )
-            except Exception as e:
-                st.warning(f"⚠️ Could not generate chart for download: {str(e)}")
+        
+        with col2:
+            # Download Table as CSV
+            if result.get("tables") and len(result["tables"]) > 0:
+                df = pd.DataFrame(result["tables"][0])
+                analysis_type = st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')
+                if analysis_type == "Market Gap":
+                    df.columns = ["Product", "Demand Score", "Competition", "Opportunity", "Market Size"]
+                elif analysis_type == "Trending Products":
+                    df.columns = ["Product", "Trend Score", "Growth", "Interest Level", "Search Volume"]
+                elif analysis_type == "High Selling Products":
+                    df.columns = ["Product", "Sales Rank", "Revenue", "Rating", "Reviews"]
+                elif analysis_type == "Competitor Analysis":
+                    df.columns = ["Competitor", "Market Share", "Strength", "Weakness", "Rating"]
+                csv = df.to_csv(index=False)
+                st.download_button(
+                    label="⬇️ Download Table (CSV)",
+                    data=csv,
+                    file_name=f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.csv",
+                    mime="text/csv",
+                    help="Download data table as CSV file",
+                    use_container_width=True
+                )
+        
+        with col3:
+            # Download Chart as PNG
+            if result.get("charts") and len(result["charts"]) > 0:
+                try:
+                    fig = go.Figure(json.loads(result["charts"][0]))
+                    img_bytes = fig.to_image(format="png")
+                    st.download_button(
+                        label="⬇️ Download Chart (PNG)",
+                        data=img_bytes,
+                        file_name=f"market_analysis_chart_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.png",
+                        mime="image/png",
+                        help="Download chart as PNG image",
+                        use_container_width=True
+                    )
+                except Exception as e:
+                    st.warning(f"⚠️ Could not generate chart for download: {str(e)}")
 
-# Footer with controls
+# Enhanced footer with controls
 st.markdown("---")
+st.markdown("""
+    <div style="text-align: center; padding: 1rem 0;">
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">
+            Powered by AI • Built with ❤️ using Streamlit
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+
 col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
-    if st.button("🔄 New Analysis", help="Start a new market analysis"):
+    if st.button("🔄 New Analysis", help="Start a new market analysis", use_container_width=True):
         st.session_state.clear()
         st.rerun()
 
 with col2:
-    if st.button("❓ Help", help="Show help information"):
+    if st.button("❓ Help", help="Show help information", use_container_width=True):
         st.info("""
         **How to use:**
         1. Select platform, country, and category in the sidebar
@@ -300,4 +568,10 @@ with col2:
         """)
 
 with col3:
-    st.metric("Status", "Ready" if not st.session_state.analysis_triggered else "Processing...")
+    status_color = "#22c55e" if not st.session_state.analysis_triggered else "#f59e0b"
+    status_text = "Ready" if not st.session_state.analysis_triggered else "Processing..."
+    st.markdown(f"""
+        <div style="text-align: center; padding: 0.5rem; background-color: #0f172b; border: 1px solid #314158; border-radius: 6px;">
+            <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
+        </div>
+    """, unsafe_allow_html=True)
