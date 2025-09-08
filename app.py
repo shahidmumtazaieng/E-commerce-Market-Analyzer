@@ -269,19 +269,39 @@ if st.session_state.analysis_triggered:
     # Enhanced analysis parameters display
     st.markdown(f"""
         <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-            <h3 style="margin-bottom: 1rem; color: #ffff;">🔎 Analyzing: {params['category']}</h3>
+            <h3 style="margin-bottom: 1rem; color: #ffffff;">🔎 Analyzing: {params['category']}</h3>
         </div>
     """, unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("🏪 Platform", params['platform'])
+        st.markdown(f"""
+            <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; text-align: center;">
+                <p style="margin: 0; color: #22c55e; font-size: 14px; font-weight: 500;">🏪 Platform</p>
+                <p style="margin: 5px 0 0 0; color: #ffffff; font-size: 24px; font-weight: 600;">{params['platform']}</p>
+            </div>
+        """, unsafe_allow_html=True)
     with col2:
-        st.metric("🌍 Country", params['country'])
+        st.markdown(f"""
+            <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; text-align: center;">
+                <p style="margin: 0; color: #22c55e; font-size: 14px; font-weight: 500;">🌍 Country</p>
+                <p style="margin: 5px 0 0 0; color: #ffffff; font-size: 24px; font-weight: 600;">{params['country']}</p>
+            </div>
+        """, unsafe_allow_html=True)
     with col3:
-        st.metric("📊 Analysis Type", params['analysis_type'])
+        st.markdown(f"""
+            <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; text-align: center;">
+                <p style="margin: 0; color: #22c55e; font-size: 14px; font-weight: 500;">📊 Analysis Type</p>
+                <p style="margin: 5px 0 0 0; color: #ffffff; font-size: 24px; font-weight: 600;">{params['analysis_type']}</p>
+            </div>
+        """, unsafe_allow_html=True)
     with col4:
-        st.metric("⏰ Time Range", params['time_range'])
+        st.markdown(f"""
+            <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; text-align: center;">
+                <p style="margin: 0; color: #22c55e; font-size: 14px; font-weight: 500;">⏰ Time Range</p>
+                <p style="margin: 5px 0 0 0; color: #ffffff; font-size: 24px; font-weight: 600;">{params['time_range']}</p>
+            </div>
+        """, unsafe_allow_html=True)
     
     # Enhanced progress indicator
     progress_bar = st.progress(0)
@@ -575,4 +595,3 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
-
