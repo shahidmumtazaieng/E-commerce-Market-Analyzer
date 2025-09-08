@@ -269,7 +269,7 @@ if st.session_state.analysis_triggered:
     # Enhanced analysis parameters display
     st.markdown(f"""
         <div style="background-color: #0f172b; border: 1px solid #314158; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-            <h3 style="margin-bottom: 1rem; color: #615fff;">🔎 Analyzing: {params['category']}</h3>
+            <h3 style="margin-bottom: 1rem; color: #ffff;">🔎 Analyzing: {params['category']}</h3>
         </div>
     """, unsafe_allow_html=True)
     
@@ -575,3 +575,4 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
