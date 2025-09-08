@@ -5,7 +5,7 @@ langgraph
 pandas
 plotly
 dotenv
-plotly_get_chrome
+
 
 
 
