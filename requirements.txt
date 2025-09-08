@@ -2,10 +2,9 @@ langchain
 langchain_google_genai
 langchain_tavily
 langgraph
-streamlit
 pandas
 plotly
 dotenv
-typing
-operator
+
+
 
