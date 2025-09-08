@@ -6,6 +6,8 @@ pandas
 plotly
 dotenv
 kaleido
+plotly_get_chrome
+
 
 
 
