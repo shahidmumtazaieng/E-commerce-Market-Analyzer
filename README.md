@@ -1,5 +1,7 @@
 "# E-commerce-Market-Analyzer" 
 # Tavily Analytic Agents
+https://e-commerce-market-analyzer-vnd8ohpjtnmvyikjzpyybr.streamlit.app/
+Use the app though this link 
 
 This project provides a multi-agent workflow for market analysis using LangChain, LangGraph, Google Gemini, and Tavily APIs. It extracts, analyzes, and visualizes market data for products, trends, competitors, and more, saving results in structured JSON format.
 
@@ -83,4 +85,5 @@ MIT License
 - [LangGraph](https://github.com/langchain-ai/langgraph)
 - [Google Gemini](https://ai.google.dev/)
 - [Tavily](https://www.tavily.com/)
+
 
