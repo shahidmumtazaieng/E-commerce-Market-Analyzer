@@ -575,18 +575,12 @@ with col1:
     st.markdown("""
     <style>
     div.stButton > button:first-child {
-        background-color: #22c55e;
-        color: white;
-        border: none;
-        padding: 0.6em 1.2em;
-        font-weight: 600;
-        border-radius: 0.4em;
-        transition: background-color 0.3s ease;
+        color: #22c55e;
+     
     }
 
     div.stButton > button:first-child:hover {
-        background-color: #16a34a;
-        color: white;
+        color: #22c55e;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -616,5 +610,6 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
