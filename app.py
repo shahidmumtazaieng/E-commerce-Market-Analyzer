@@ -12,11 +12,11 @@ st.markdown("""
     
     /* Root variables matching your theme */
     :root {
-        --text-color: #615fff;
+        --text-color: #e2e8f0;
         --primary-color: #615fff;
         --background-color: #1d293d;
         --secondary-background-color: #0f172b;
-        --border-color: #314158;
+        --border-color: #22c55e;
         --font-family: 'Space Grotesk', sans-serif;
     }
     
@@ -595,5 +595,6 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
