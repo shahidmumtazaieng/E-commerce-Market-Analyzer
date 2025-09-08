@@ -5,6 +5,7 @@ langgraph
 pandas
 plotly
 dotenv
+pip install --upgrade kaleido
 
 
 
