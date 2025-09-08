@@ -5,7 +5,8 @@ langgraph
 pandas
 plotly
 dotenv
-Kaleido 
+kaleido --upgrade
+
 
 
 
