@@ -74,6 +74,15 @@ st.markdown("""
         background-clip: text;
     }
 
+    /* Responsive h1 styling for mobile */
+    @media (max-width: 640px) {
+        h1 {
+            font-size: 1.8rem;
+            margin: 0.5rem 1rem;
+            line-height: 1.2;
+        }
+    }
+
     h2 { font-size: 1.5rem; font-weight: 400; }
     h3 { font-size: 1rem; font-weight: 400; }
 
