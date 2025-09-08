@@ -568,10 +568,10 @@ with col2:
         """)
 
 with col3:
-    status_color = var(--primary-color) if not st.session_state.analysis_triggered else "#f59e0b"
+    status_color = "#22c55e" if not st.session_state.analysis_triggered else "#f59e0b"
     status_text = "Ready" if not st.session_state.analysis_triggered else "Processing..."
     st.markdown(f"""
         <div style="text-align: center; padding: 0.5rem; background-color: #0f172b; border: 1px solid #314158; border-radius: 6px;">
-            <span style="color: #615fff; font-weight: 500;">● {status_text}</span>
+            <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
