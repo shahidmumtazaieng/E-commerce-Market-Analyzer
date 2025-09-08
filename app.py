@@ -64,7 +64,7 @@ st.markdown("""
     
     /* Button styling */
     .stButton > button {
-        background-color: var(--button-color);
+        background-color: var(--primary-color);
         color: white;
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -596,6 +596,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
