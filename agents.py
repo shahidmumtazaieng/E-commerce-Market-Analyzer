@@ -24,7 +24,7 @@ try:
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",  # Using gemini-1.5-flash as gemini-2.5-flash is not available
         temperature=0.3,
-        max_tokens=2048,
+        max_tokens=5048,
         max_retries=3,
     )
     print("✅ Google Gemini LLM initialized successfully")
@@ -453,3 +453,4 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
         save_results_tool(error_result)
 
         return error_result
+
