@@ -75,7 +75,7 @@ st.markdown("""
     }
 
     /* Responsive h1 styling for mobile */
-    @media (max-width: 640px) {
+    @media (max-width: 740px) {
         h1 {
             font-size: 1.8rem;
             margin: 0.5rem 1rem;
@@ -549,3 +549,4 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
