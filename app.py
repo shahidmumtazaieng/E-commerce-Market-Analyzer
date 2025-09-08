@@ -18,7 +18,6 @@ st.markdown("""
         --secondary-background-color: #0f172b;
         --border-color: #314158;
         --font-family: 'Space Grotesk', sans-serif;
-        --button-color: #22c55e;
     }
     
     /* Main app styling */
@@ -180,8 +179,8 @@ st.markdown("""
     
     /* Download button styling */
     .stDownloadButton > button {
-        background-color: var(--button-color);
-        color: green;
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
         border: 1px solid var(--border-color);
         font-family: var(--font-family);
     }
@@ -596,9 +595,3 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
-
-
-
-
-
-
