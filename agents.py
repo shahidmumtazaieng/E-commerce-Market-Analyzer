@@ -273,6 +273,7 @@ class AgentState(TypedDict):
     platform: str
     region: str
     time_period: str
+    iteration_count: int  # Added to track iterations
 
 def search_node(state: AgentState) -> AgentState:
     """Search agent node"""
@@ -304,15 +305,23 @@ def visualize_node(state: AgentState) -> AgentState:
 
 def supervisor_node(state: AgentState) -> AgentState:
     """Supervisor node to determine next step"""
+    # Initialize or increment iteration counter
+    iteration_count = state.get("iteration_count", 0) + 1
+    
+    # Force exit after 100 iterations to prevent infinite loops
+    if iteration_count >= 100:
+        print(f"⚠️ Max iterations (100) reached. Forcing workflow to FINISH.")
+        return {"next": "FINISH", "iteration_count": iteration_count}
+
     if not state.get("raw_data"):
-        return {"next": "search"}
+        return {"next": "search", "iteration_count": iteration_count}
     elif not state.get("extracted_data"):
-        return {"next": "extract"}
+        return {"next": "extract", "iteration_count": iteration_count}
     elif not state.get("analysis"):
-        return {"next": "analyze"}
+        return {"next": "analyze", "iteration_count": iteration_count}
     elif not state.get("chart"):
-        return {"next": "visualize"}
-    return {"next": "FINISH"}
+        return {"next": "visualize", "iteration_count": iteration_count}
+    return {"next": "FINISH", "iteration_count": iteration_count}
 
 # LangGraph Workflow
 graph = StateGraph(AgentState)
@@ -425,11 +434,12 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
             "category": category,
             "platform": platform,
             "region": region,
-            "time_period": time_period
+            "time_period": time_period,
+            "iteration_count": 0  # Initialize iteration counter
         }
 
         # Run workflow
-        final_state = workflow.invoke(state, recursion_limit=2000)  # Increased from 1000 to 2000
+        final_state = workflow.invoke(state, recursion_limit=5000)  # Increased to 5000
         
         result = {
             "summary": final_state["analysis"].get("summary", "Analysis completed with limited data."),
@@ -453,4 +463,3 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
         save_results_tool(error_result)
 
         return error_result
-
