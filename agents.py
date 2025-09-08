@@ -429,7 +429,7 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
         }
 
         # Run workflow
-        final_state = workflow.invoke(state, max_steps=1000)  # Increase from default (20) to 50 steps
+        final_state = workflow.invoke(state, recursion_limit=2000)  # Increased from 1000 to 2000
         
         result = {
             "summary": final_state["analysis"].get("summary", "Analysis completed with limited data."),
@@ -453,4 +453,3 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
         save_results_tool(error_result)
 
         return error_result
-
