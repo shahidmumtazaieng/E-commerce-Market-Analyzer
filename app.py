@@ -81,6 +81,7 @@ st.markdown("""
     .stButton > button,
     .stDownloadButton > button,
     button[kind="primary"],
+    button[kind="secondary"],
     .stMultiSelect > div > div > div[role="listbox"] > div[role="option"] > button {
         background-color: var(--primary-color) !important;
         color: white !important;
@@ -94,7 +95,8 @@ st.markdown("""
 
     .stButton > button:hover,
     .stDownloadButton > button:hover,
-    button[kind="primary"]:hover {
+    button[kind="primary"]:hover,
+    button[kind="secondary"]:hover {
         background-color: #7c3aed !important;
         border-color: var(--primary-color) !important;
         transform: translateY(-1px) !important;
@@ -538,4 +540,3 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
-
