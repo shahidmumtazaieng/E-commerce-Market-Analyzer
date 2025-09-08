@@ -572,19 +572,9 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
-    st.markdown("""
-    <style>
-    div.stButton > button:first-child {
-        color: #22c55e;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Button logic
-if st.button("🔄 New Analysis", help="Start a new market analysis", use_container_width=True):
-    st.session_state.clear()
-    st.rerun()
-
+    if st.button("🔄 New Analysis", help="Start a new market analysis", use_container_width=True):
+       st.session_state.clear()
+       st.rerun()
 
 with col2:
     if st.button("❓ Help", help="Show help information", use_container_width=True):
@@ -605,6 +595,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
