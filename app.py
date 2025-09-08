@@ -572,11 +572,48 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
-    if st.button("🔄 <style color:green>New Analysis</style>", help="Start a new market analysis", use_container_width=True):
-       st.session_state.clear()
-       st.rerun()
+    st.markdown("""
+        <style>
+        .custom-green-button > button {
+            background-color: #22c55e !important;
+            color: white !important;
+            border: 1px solid #16a34a;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-green-button > button:hover {
+            background-color: #16a34a !important;
+            color: white !important;
+        }
+        </style>
+        <div class="custom-green-button">
+    """, unsafe_allow_html=True)
+
+    if st.button("🔄 New Analysis", help="Start a new market analysis", use_container_width=True):
+        st.session_state.clear()
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
+    st.markdown("""
+        <style>
+        .custom-help-button > button {
+            background-color: #22c55e !important;
+            color: white !important;
+            border: 1px solid #16a34a;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-help-button > button:hover {
+            background-color: #16a34a !important;
+            color: white !important;
+        }
+        </style>
+        <div class="custom-help-button">
+    """, unsafe_allow_html=True)
+
     if st.button("❓ Help", help="Show help information", use_container_width=True):
         st.info("""
         **How to use:**
@@ -586,6 +623,8 @@ with col2:
         4. Review insights, charts, and recommendations
         5. Export or save results as needed
         """)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 with col3:
     status_color = "#22c55e" if not st.session_state.analysis_triggered else "#f59e0b"
@@ -595,6 +634,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
