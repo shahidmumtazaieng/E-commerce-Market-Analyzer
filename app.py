@@ -16,11 +16,31 @@ st.markdown("""
     /* Root variables matching your theme */
     :root {
         --text-color: #e2e8f0;
-        --primary-color: #615fff; /* branding purple */
+        --primary-color: #615fff;
         --background-color: #1d293d;
         --secondary-background-color: #0f172b;
         --border-color: #314158;
         --font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Global button styling */
+    .stButton > button,
+    .stDownloadButton > button {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        font-family: var(--font-family) !important;
+        font-weight: 400 !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .stButton > button:hover,
+    .stDownloadButton > button:hover {
+        background-color: #7c3aed !important;
+        border-color: var(--primary-color) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(97, 95, 255, 0.3) !important;
     }
 
     /* Main app styling */
@@ -518,3 +538,4 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
