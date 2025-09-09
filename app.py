@@ -150,7 +150,7 @@ st.markdown("""
 # Custom title with enhanced styling
 st.markdown("""
     <h1 style="text-align: center; margin-bottom: 0.5rem;">
-        🛍️ E-commerce Market Analyzer
+        🛍️ TTS Sirbuland GPT- ecommerce Market Analyzer
     </h1>
     <p style="text-align: center; color: #94a3b8; font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; font-size: 1.1rem;">
         Discover <strong style="color: #615fff;">real-time market gaps, trends, and high-selling products</strong> using TTS Sir Buland GPT.
@@ -549,6 +549,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
