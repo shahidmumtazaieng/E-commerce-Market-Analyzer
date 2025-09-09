@@ -1,7 +1,7 @@
  
 # Tavily Analytic Agents
 
-ttssirbulandgpt.com
+https://ttssirbulandgpt.com/
 
 Use the app through this link 
 
@@ -87,6 +87,7 @@ MIT License
 - [LangGraph](https://github.com/langchain-ai/langgraph)
 - [Google Gemini](https://ai.google.dev/)
 - [Tavily](https://www.tavily.com/)
+
 
 
 
