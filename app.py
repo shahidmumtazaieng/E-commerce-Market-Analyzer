@@ -167,7 +167,7 @@ if "result" not in st.session_state:
 with st.sidebar:
     st.markdown("""
         <h2 style="color: #615fff; border-bottom: 2px solid #314158; padding-bottom: 0.5rem; margin-bottom: 1rem;">
-            ⚙️ Configuration
+           🛍️ TTS Sirbuland GPT
         </h2>
     """, unsafe_allow_html=True)
 
@@ -549,6 +549,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
