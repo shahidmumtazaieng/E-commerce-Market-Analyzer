@@ -517,7 +517,7 @@ st.markdown("---")
 st.markdown("""
     <div style="text-align: center; padding: 1rem 0;">
         <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">
-            Powered by AI • developed by ❤️ Shahid Mumtaz
+            Powered by AI • developed by ❤️ <a href="https://github.com/shahidmumtazaieng/">Shahid Mumtaz</a>
         </p>
     </div>
 """, unsafe_allow_html=True)
@@ -549,5 +549,6 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
