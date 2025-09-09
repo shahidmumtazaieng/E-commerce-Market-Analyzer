@@ -10,8 +10,15 @@ st.set_page_config(layout="wide", page_title="TTS Sirbuland GPT E-com Market Ana
 
 # Custom CSS for the dark theme and unified button styling
 st.markdown("""
-<head>
-<meta name="google-site-verification" content="pMmG1UgKkKjB5x4pM6a8JwXGbrd2nR2bGvbotvQ5cek" /></head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-16SYCYH3VT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-16SYCYH3VT');
+</script>
 <style>
     @import url('https://fonts.gstatic.com/s/spacegrotesk/v21/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2');
 
@@ -551,6 +558,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
