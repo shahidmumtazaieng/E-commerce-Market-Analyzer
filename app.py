@@ -6,10 +6,12 @@ import plotly.graph_objects as go
 from agents import agent_orchestrator, load_results_tool, save_results_tool
 
 # Page config (set early)
-st.set_page_config(layout="wide", page_title="E-commerce Market Analyzer", page_icon="🛍️")
+st.set_page_config(layout="wide", page_title="TTS Sirbuland GPT E-com Market Analyzer", page_icon="🛍️")
 
 # Custom CSS for the dark theme and unified button styling
 st.markdown("""
+<head>
+<meta name="google-site-verification" content="pMmG1UgKkKjB5x4pM6a8JwXGbrd2nR2bGvbotvQ5cek" /></head>
 <style>
     @import url('https://fonts.gstatic.com/s/spacegrotesk/v21/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2');
 
@@ -150,7 +152,7 @@ st.markdown("""
 # Custom title with enhanced styling
 st.markdown("""
     <h1 style="text-align: center; margin-bottom: 0.5rem;">
-        🛍️ TTS Sirbuland GPT- ecommerce Market Analyzer
+        🛍️ E-commerce Market Analyzer
     </h1>
     <p style="text-align: center; color: #94a3b8; font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; font-size: 1.1rem;">
         Discover <strong style="color: #615fff;">real-time market gaps, trends, and high-selling products</strong> using TTS Sir Buland GPT.
@@ -549,6 +551,7 @@ with col3:
             <span style="color: {status_color}; font-weight: 500;">● {status_text}</span>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 
