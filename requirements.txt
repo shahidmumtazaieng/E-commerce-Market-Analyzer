@@ -6,6 +6,8 @@ pandas
 plotly
 dotenv
 kaleido==1.0.0
+streamlit
+
 
 
 
