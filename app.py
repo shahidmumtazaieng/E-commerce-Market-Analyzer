@@ -162,7 +162,7 @@ st.markdown("""
         🛍️ E-commerce Market Analyzer
     </h1>
     <p style="text-align: center; color: #94a3b8; font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; font-size: 1.1rem;">
-        Discover <strong style="color: #615fff;">real-time market gaps, trends, and high-selling products</strong> using TTS Sir Buland GPT.
+        Discover <strong style="color: #615fff;">real-time market gaps, trends, and high-selling products</strong> using TTS Sirbuland GPT.
     </p>
 """, unsafe_allow_html=True)
 
@@ -191,7 +191,7 @@ with st.sidebar:
         help="Choose the country for market analysis."
     )
     category = st.text_input(
-        "🏷️ Product Category/Keywords",
+        "🏷️ Product Category/brand",
         "smart home devices",
         help="Enter product category or keywords (e.g., 'smart home devices')."
     )
