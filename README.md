@@ -1,4 +1,5 @@
-"# E-commerce-Market-Analyzer" 
+GOOGLE_API_KEY ='AIzaSyDFPkbtdw5NHJZ6UD05yIwlYWQaBTj50WE'
+TAVILY_API_KEY ='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'"# E-commerce-Market-Analyzer" 
 # Tavily Analytic Agents
 https://e-commerce-market-analyzer.streamlit.app/
 Use the app through this link 
@@ -85,6 +86,7 @@ MIT License
 - [LangGraph](https://github.com/langchain-ai/langgraph)
 - [Google Gemini](https://ai.google.dev/)
 - [Tavily](https://www.tavily.com/)
+
 
 
 
