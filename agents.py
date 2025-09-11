@@ -334,7 +334,7 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
             ),
             text=[f"${size:.1f}M<br>{name[:15]}..." if len(name) > 15 else f"${size:.1f}M<br>{name}" for name, size in zip(product_names, market_sizes)],
             textposition='middle center',
-            textfont=dict(size=11, color='white', family='Arial Black'),
+            textfont=dict(size=11, color='#22c55e', family='Arial Black'),
             name='💰 Revenue Opportunities',
             hovertemplate='<b>%{hovertext}</b><br>Market Demand: %{x}/10<br>Profit Opportunity: %{y}/10<br>Revenue Potential: $%{marker.size}M<extra></extra>',
             hovertext=product_names
@@ -347,7 +347,7 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
             yaxis=dict(range=[0, 12], tickmode='array', tickvals=[1, 5, 10], ticktext=['⚠️ High Risk', '⚡ Medium Risk', '✅ High Profit']),
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=True, legend=dict(x=0.02, y=0.98),
-            annotations=[dict(text="Bubble Size = Revenue Potential 💵", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="Bubble Size = Revenue Potential 💵", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig1.to_json())
         
@@ -367,7 +367,7 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
             title=f"💵 Revenue Distribution: Which {category} Make Most Money ({country})",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=True, legend=dict(x=0.85, y=0.5),
-            annotations=[dict(text=f"Total Market<br>${sum(market_sizes):.1f}M", x=0.5, y=0.5, font_size=16, showarrow=False, font=dict(color='#615fff'))]
+            annotations=[dict(text=f"Total Market<br>${sum(market_sizes):.1f}M", x=0.5, y=0.5, font_size=16, showarrow=False, font=dict(color='#22c55e'))]
         )
         charts.append(fig2.to_json())
         
@@ -389,7 +389,7 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
             xaxis_title="📦 Product Opportunities", yaxis_title="Score (Higher = Better for Green, Worse for Red)",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             barmode='group', showlegend=True, legend=dict(x=0.02, y=0.98),
-            annotations=[dict(text="🎯 Look for HIGH Green + LOW Red = Best Seller Opportunities", x=0.5, y=-0.15, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="🎯 Look for HIGH Green + LOW Red = Best Seller Opportunities", x=0.5, y=-0.15, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig3.to_json())
         
@@ -444,7 +444,7 @@ def create_trending_products_charts(data: List[Dict], category: str, platform: s
             xaxis_title="📅 Time (Recent Months)", yaxis_title="📈 Sales Growth % (Higher = Better)",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=True, legend=dict(x=0.02, y=0.98),
-            annotations=[dict(text="🎯 Choose products with UPWARD trend lines for maximum profit", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="🎯 Choose products with UPWARD trend lines for maximum profit", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig1.to_json())
         
@@ -473,7 +473,7 @@ def create_trending_products_charts(data: List[Dict], category: str, platform: s
             xaxis_title="🔍 Monthly Customer Searches (Thousands)", yaxis_title="📈 Trend Score (0-100)",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
-            annotations=[dict(text="Bubble Size = Growth Rate 🚀 | Top Right = Best Opportunities", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="Bubble Size = Growth Rate 🚀 | Top Right = Best Opportunities", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig2.to_json())
         
@@ -489,7 +489,7 @@ def create_trending_products_charts(data: List[Dict], category: str, platform: s
             ),
             text=[f"🚀 +{rate}%" for rate in growth_rates],
             textposition='inside',
-            textfont=dict(size=12, color='white', family='Arial Bold'),
+            textfont=dict(size=12, color='#22c55e', family='Arial Bold'),
             hovertemplate='<b>%{y}</b><br>Growth Rate: +%{x}%<extra></extra>'
         ))
         
@@ -498,7 +498,7 @@ def create_trending_products_charts(data: List[Dict], category: str, platform: s
             xaxis_title="📈 Growth Rate % (Higher = Better for Sellers)", yaxis_title="📦 Products",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
-            annotations=[dict(text="🎯 Target products with 100%+ growth for maximum seller success", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="🎯 Target products with 100%+ growth for maximum seller success", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig3.to_json())
         
@@ -603,7 +603,7 @@ def create_high_selling_charts(data: List[Dict], category: str, platform: str, c
             xaxis_title="📦 Units Sold (Higher = Popular)", yaxis_title="💵 Total Revenue $ (Higher = Profitable)",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
-            annotations=[dict(text="Bubble Size = Customer Rating ⭐ | Top Right = Best Seller Opportunities", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="Bubble Size = Customer Rating ⭐ | Top Right = Best Seller Opportunities", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig1.to_json())
         
@@ -624,7 +624,7 @@ def create_high_selling_charts(data: List[Dict], category: str, platform: str, c
             title=f"📦 Revenue Breakdown: Top {category} Money Makers ({country})",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=True, legend=dict(x=0.85, y=0.5),
-            annotations=[dict(text=f"Total Revenue<br>${sum(revenues)/1000000:.1f}M", x=0.5, y=0.5, font_size=16, showarrow=False, font=dict(color='#615fff'))]
+            annotations=[dict(text=f"Total Revenue<br>${sum(revenues)/1000000:.1f}M", x=0.5, y=0.5, font_size=16, showarrow=False, font=dict(color='#22c55e'))]
         )
         charts.append(fig2.to_json())
         
@@ -653,7 +653,7 @@ def create_high_selling_charts(data: List[Dict], category: str, platform: str, c
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
             yaxis=dict(range=[3.5, 5.1]),
-            annotations=[dict(text="Bubble Size = Sales Volume 📦 | Top Right = Customer Favorites", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="Bubble Size = Sales Volume 📦 | Top Right = Customer Favorites", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig3.to_json())
         
@@ -708,7 +708,7 @@ def create_competitor_charts(data: List[Dict], category: str, platform: str, cou
             xaxis_title="🏆 Your Competition (Companies to Beat)", yaxis_title="📈 Market Share % (Red = Harder to Beat)",
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
-            annotations=[dict(text="🎯 Red = Tough Competition | Yellow = Beatable | Green = Easy Target", x=0.5, y=-0.15, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="🎯 Red = Tough Competition | Yellow = Beatable | Green = Easy Target", x=0.5, y=-0.15, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig1.to_json())
         
@@ -738,7 +738,7 @@ def create_competitor_charts(data: List[Dict], category: str, platform: str, cou
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=False,
             yaxis=dict(range=[3.5, 5.1]),
-            annotations=[dict(text="Bubble Size = Market Share 📈 | Find Empty Spaces for Your Opportunity", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="Bubble Size = Market Share 📈 | Find Empty Spaces for Your Opportunity", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig2.to_json())
         
@@ -781,7 +781,7 @@ def create_competitor_charts(data: List[Dict], category: str, platform: str, cou
             ),
             plot_bgcolor='#1d293d', paper_bgcolor='#0f172b', font_color='#e2e8f0',
             showlegend=True, legend=dict(x=0.85, y=0.95),
-            annotations=[dict(text="🎯 Study competitor weaknesses to find your winning strategy", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#94a3b8'))]
+            annotations=[dict(text="🎯 Study competitor weaknesses to find your winning strategy", x=0.5, y=-0.12, xref="paper", yref="paper", showarrow=False, font=dict(color='#22c55e', size=12))]
         )
         charts.append(fig3.to_json())
         
@@ -902,7 +902,7 @@ def create_high_selling_chart(data: List[Dict], category: str, platform: str, co
                     showarrow=False,
                     x=0.5, y=-0.15,
                     xref="paper", yref="paper",
-                    font=dict(size=12, color='#94a3b8')
+                    font=dict(size=12, color='#22c55e')
                 )
             ]
         )
@@ -964,7 +964,7 @@ def create_competitor_chart(data: List[Dict], category: str, platform: str, coun
                     showarrow=False,
                     x=0.5, y=-0.15,
                     xref="paper", yref="paper",
-                    font=dict(size=12, color='#94a3b8')
+                    font=dict(size=12, color='#22c55e')
                 )
             ]
         )
