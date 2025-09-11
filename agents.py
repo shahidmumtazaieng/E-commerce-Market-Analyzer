@@ -667,28 +667,119 @@ def create_competitor_charts(data: List[Dict], category: str, platform: str, cou
     charts = []
     
     try:
-        # Use real competitor names from data or generate realistic ones
+        # Debug logging to track data flow
+        print(f"📊 Competitor Charts - Received data: {len(data) if data else 0} items")
+        print(f"📊 Parameters: {category} | {platform} | {country} | {time_range}")
+        
+        # Enhanced data validation and processing
         if data and len(data) > 0:
-            competitor_names = [item["competitor"] for item in data]
-            market_shares = [float(item["market_share"].replace("%", "")) for item in data]
-            ratings = [float(item["rating"].split("/")[0]) if "/" in item["rating"] else float(item["rating"]) for item in data]
-            # Generate pricing and product data based on market share
+            # Validate data structure before processing
+            print(f"📊 Processing competitor data: {[item.get('competitor', 'N/A') for item in data[:3]]}")
+            
+            # Robust data extraction with error handling
+            competitor_names = []
+            market_shares = []
+            ratings = []
+            
+            for item in data:
+                if isinstance(item, dict) and 'competitor' in item:
+                    competitor_names.append(str(item.get('competitor', 'Unknown Competitor')))
+                    
+                    # Parse market share safely
+                    try:
+                        share_str = str(item.get('market_share', '0%')).replace('%', '').replace(',', '')
+                        market_shares.append(float(share_str))
+                    except (ValueError, TypeError):
+                        market_shares.append(15.0)  # Default market share
+                    
+                    # Parse rating safely
+                    try:
+                        rating_str = str(item.get('rating', '4.0'))
+                        if '/' in rating_str:
+                            rating_value = float(rating_str.split('/')[0])
+                        else:
+                            rating_value = float(rating_str)
+                        ratings.append(min(5.0, max(1.0, rating_value)))  # Clamp between 1-5
+                    except (ValueError, TypeError):
+                        ratings.append(4.0)  # Default rating
+            
+            # Generate complementary data based on market share
             pricing_positions = [120 - (share * 2) for share in market_shares]  # Higher share = better pricing
             product_counts = [int(share * 15) for share in market_shares]  # Share correlates with portfolio
+            
+            print(f"✅ Processed {len(competitor_names)} competitors from real data")
         else:
-            # Generate realistic competitor names based on category
-            category_competitors = {
-                "smart home devices": ["Amazon (Echo/Alexa)", "Google (Nest)", "Philips (Hue)", "Ring (Security)", "TP-Link (Kasa)"],
-                "electronics": ["Apple Inc.", "Samsung Electronics", "Sony Corporation", "Anker Technology", "Bose Corporation"],
-                "fitness equipment": ["Bowflex (Nautilus)", "NordicTrack (iFIT)", "Peloton Interactive", "Resistance Band Co.", "Yoga Outlet"],
-                "kitchen appliances": ["Ninja Kitchen", "Keurig Dr Pepper", "Instant Brands", "Vitamix Corporation", "Breville Group"],
-                "wireless headphones": ["Apple (AirPods)", "Sony Electronics", "Bose Corporation", "Jabra (GN Audio)", "Sennheiser"]
+            print(f"⚠️ No valid competitor data, generating platform/country-specific fallback")
+            
+            # Enhanced fallback with platform and country awareness
+            platform_competitors = {
+                "amazon": {
+                    "smart home devices": ["Amazon (Echo/Alexa)", "Ring (Security)", "Wyze Labs", "Philips (Hue)", "TP-Link (Kasa)"],
+                    "electronics": ["Amazon Basics", "Anker Technology", "Apple Inc.", "Samsung Electronics", "Sony Corporation"],
+                    "fitness equipment": ["Amazon Basics Fitness", "Bowflex (Nautilus)", "NordicTrack (iFIT)", "Resistance Band Co.", "CAP Barbell"],
+                    "kitchen appliances": ["Amazon Basics Kitchen", "Instant Pot", "Ninja Kitchen", "Keurig Dr Pepper", "Hamilton Beach"],
+                    "wireless headphones": ["Amazon Echo Buds", "Apple (AirPods)", "Sony Electronics", "Bose Corporation", "Jabra (GN Audio)"]
+                },
+                "shopify": {
+                    "smart home devices": ["SmartThings", "Nest Labs", "Philips Hue", "Ecobee", "Lutron Caseta"],
+                    "electronics": ["Direct2U Electronics", "TechMart Pro", "GadgetHub", "ElectroWorld", "TechGiant Store"],
+                    "fitness equipment": ["FitnessDirect", "HomeGym Pro", "StrengthShop", "CardioKing", "FlexFit Store"],
+                    "kitchen appliances": ["KitchenPro Direct", "CookingMaster", "ChefTools", "HomeChef Store", "CulinaryWorld"],
+                    "wireless headphones": ["AudioPro Direct", "SoundMaster", "BeatShop", "AudioHub", "TechSound Store"]
+                },
+                "ebay": {
+                    "smart home devices": ["Smart Home Central", "IoT Solutions", "Home Automation Pro", "Connected Living", "Digital Home Store"],
+                    "electronics": ["ElectroMax", "TechDeals Pro", "Gadget Galaxy", "ElectronicsHub", "Digital World Store"],
+                    "fitness equipment": ["Fitness Warehouse", "Gym Equipment Pro", "Health & Fitness Store", "WorkoutGear Central", "FitLife Store"],
+                    "kitchen appliances": ["Kitchen Central", "Appliance Warehouse", "Cook & Bake Store", "Home Chef Central", "Culinary Solutions"],
+                    "wireless headphones": ["Audio Central", "Sound Solutions", "Headphone Hub", "Audio Warehouse", "Sound Central Store"]
+                }
             }
-            competitor_names = category_competitors.get(category.lower(), [f"{category} Leader {chr(65+i)}" for i in range(5)])
-            market_shares = [28.5, 22.3, 18.7, 15.2, 15.3]
+            
+            # Get platform-specific competitors or fall back to general category
+            platform_key = platform.lower()
+            if platform_key in platform_competitors and category.lower() in platform_competitors[platform_key]:
+                competitor_names = platform_competitors[platform_key][category.lower()]
+                print(f"✅ Using {platform} specific competitors for {category}")
+            else:
+                # General fallback with category focus
+                category_competitors = {
+                    "smart home devices": ["Smart Home Leader A", "IoT Solutions B", "Connected Devices C", "Home Automation D", "Smart Tech E"],
+                    "electronics": ["Electronics Leader A", "Tech Solutions B", "Digital Devices C", "Innovation Corp D", "Tech Pro E"],
+                    "fitness equipment": ["Fitness Leader A", "Health Solutions B", "Workout Pro C", "Gym Equipment D", "Fitness Tech E"],
+                    "kitchen appliances": ["Kitchen Leader A", "Appliance Pro B", "Cooking Solutions C", "Chef Equipment D", "Kitchen Tech E"],
+                    "wireless headphones": ["Audio Leader A", "Sound Pro B", "Headphone Corp C", "Audio Tech D", "Sound Solutions E"]
+                }
+                competitor_names = category_competitors.get(category.lower(), [f"{category} Leader {chr(65+i)}" for i in range(5)])
+                print(f"✅ Using general category competitors for {category}")
+            
+            # Generate realistic market data that varies by platform/country
+            country_multipliers = {
+                "usa": 1.0, "united states": 1.0,
+                "canada": 0.85, "uk": 0.9, "united kingdom": 0.9,
+                "germany": 0.95, "france": 0.88, "australia": 0.82
+            }
+            multiplier = country_multipliers.get(country.lower(), 0.9)
+            
+            market_shares = [28.5 * multiplier, 22.3 * multiplier, 18.7 * multiplier, 15.2 * multiplier, 15.3 * multiplier]
             ratings = [4.2, 4.6, 3.9, 4.8, 4.1]
             pricing_positions = [89, 125, 67, 145, 98]
             product_counts = [450, 320, 280, 180, 220]
+        
+        # Debug: Confirm data is consistent and meaningful
+        print(f"📊 COMPETITOR CHARTS - Final Data Check:")
+        print(f"📊 Competitors: {competitor_names[:3]}") 
+        print(f"📊 Market Shares: {market_shares[:3]}")
+        print(f"📊 Platform: {platform} | Country: {country} | Category: {category}")
+        
+        # Validate data makes sense for the given selections
+        if not competitor_names or len(competitor_names) == 0:
+            print(f"⚠️ No competitor names available, using category defaults")
+            competitor_names = [f"{category} Competitor {i+1}" for i in range(5)]
+            market_shares = [25, 20, 18, 15, 12]
+            ratings = [4.2, 4.0, 4.1, 4.3, 3.9]
+            pricing_positions = [100, 110, 90, 120, 85]
+            product_counts = [300, 250, 200, 180, 160]
         
         # Chart 1: 📈 Market Domination (Who Controls What)
         fig1 = go.Figure()
@@ -1160,40 +1251,82 @@ def generate_enhanced_fallback_data(analysis_type: str, category: str, platform:
         ]
     
     elif analysis_type.lower() == "competitor analysis":
+        # Enhanced platform and country-specific competitor analysis
+        competitor_multiplier = p_mult['competition_factor'] * c_factor['market_factor']
+        
+        # Platform-specific competitor characteristics
+        platform_competitor_traits = {
+            "Amazon": {
+                "base_shares": [35, 28, 18, 12, 7],
+                "strengths": ["Brand Recognition & Prime", "Technology & Innovation", "Affordability & Reviews", "Niche Quality Focus", "International Reach"],
+                "weaknesses": ["High Competition", "Limited Brand Control", "Quality Inconsistency", "Limited Marketing", "Local Support Gaps"]
+            },
+            "eBay": {
+                "base_shares": [25, 22, 20, 18, 15],
+                "strengths": ["Auction Model", "Collector Network", "Price Flexibility", "Global Reach", "Established Seller Base"],
+                "weaknesses": ["Trust Issues", "Payment Disputes", "Shipping Complexity", "Quality Variance", "Competition Transparency"]
+            },
+            "Walmart": {
+                "base_shares": [32, 26, 19, 14, 9],
+                "strengths": ["Store Integration", "Local Pickup", "Brand Trust", "Bulk Pricing", "Logistics Network"],
+                "weaknesses": ["Limited Selection", "Slow Innovation", "Price Pressure", "Brand Restrictions", "Regional Focus"]
+            },
+            "Shopify": {
+                "base_shares": [30, 24, 20, 16, 10],
+                "strengths": ["Brand Control", "Direct Customer Data", "Custom Experience", "Marketing Freedom", "Higher Margins"],
+                "weaknesses": ["Traffic Generation", "Customer Acquisition Cost", "Technical Setup", "Payment Processing", "Customer Trust Building"]
+            }
+        }
+        
+        platform_key = platform if platform in platform_competitor_traits else "Amazon"
+        competitor_data = platform_competitor_traits[platform_key]
+        
+        # Country-specific market adjustments
+        country_competitive_factors = {
+            "US": 1.0, "United States": 1.0,
+            "UK": 0.85, "United Kingdom": 0.85,
+            "Germany": 0.92, "DE": 0.92,
+            "Canada": 0.78, "CA": 0.78,
+            "Australia": 0.75, "AU": 0.75,
+            "France": 0.82, "FR": 0.82
+        }
+        
+        country_factor = country_competitive_factors.get(country, 0.9)
+        
         return [
             {
                 "competitor": brands[0],
-                "market_share": f"{round(35 * p_mult['competition_factor'])}%",
-                "strength": "Brand Recognition",
-                "weakness": "High Pricing",
+                "market_share": f"{round(competitor_data['base_shares'][0] * country_factor)}%",
+                "strength": competitor_data['strengths'][0],
+                "weakness": competitor_data['weaknesses'][0],
                 "rating": "4.5/5"
             },
             {
                 "competitor": brands[1],
-                "market_share": f"{round(28 * p_mult['competition_factor'])}%",
-                "strength": "Technology",
-                "weakness": "Limited Distribution",
+                "market_share": f"{round(competitor_data['base_shares'][1] * country_factor)}%",
+                "strength": competitor_data['strengths'][1],
+                "weakness": competitor_data['weaknesses'][1],
                 "rating": "4.3/5"
             },
             {
                 "competitor": brands[2],
-                "market_share": f"{round(18 * p_mult['competition_factor'])}%",
-                "strength": "Affordability",
-                "weakness": "Quality Issues",
+                "market_share": f"{round(competitor_data['base_shares'][2] * country_factor)}%",
+                "strength": competitor_data['strengths'][2],
+                "weakness": competitor_data['weaknesses'][2],
                 "rating": "3.8/5"
             },
             {
                 "competitor": brands[3],
-                "market_share": f"{round(12 * p_mult['competition_factor'])}%",
-                "strength": "Quality",
-                "weakness": "Niche Market",
+                "market_share": f"{round(competitor_data['base_shares'][3] * country_factor)}%",
+                "strength": competitor_data['strengths'][3],
+                "weakness": competitor_data['weaknesses'][3],
                 "rating": "4.7/5"
             },
             {
                 "competitor": brands[4],
-                "market_share": f"{round(7 * p_mult['competition_factor'])}%",
-                "strength": "International Reach",
-                "weakness": "Local Support",
+                "market_share": f"{round(competitor_data['base_shares'][4] * country_factor)}%",
+                "strength": competitor_data['strengths'][4],
+                "weakness": competitor_data['weaknesses'][4],
                 "rating": "4.1/5"
             }
         ]
