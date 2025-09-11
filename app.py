@@ -2141,76 +2141,88 @@ if st.session_state.result:
                     if isinstance(table_data, list) and len(table_data) > 0:
                         df = pd.DataFrame(table_data)
                         
-                        # Analysis-specific column naming and formatting
-                        if analysis_type == "Market Gap":
-                            df.columns = ["Product/Opportunity", "Demand Score", "Competition Level", "Market Opportunity", "Est. Market Size"]
-                            # Highlight high opportunity rows
-                            def highlight_opportunities(row):
-                                if 'High' in str(row['Market Opportunity']):
-                                    return ['background-color: rgba(34, 197, 94, 0.1)'] * len(row)
-                                return [''] * len(row)
-                            styled_df = df.style.apply(highlight_opportunities, axis=1)
-                            
-                        elif analysis_type == "Trending Products":
-                            df.columns = ["Trending Product", "Trend Score", "Growth Rate", "Interest Level", "Search Volume"]
-                            # Highlight high trend scores
-                            def highlight_trending(row):
-                                try:
-                                    score = float(str(row['Trend Score']).replace('%', '').replace('+', ''))
-                                    if score > 85:
-                                        return ['background-color: rgba(239, 68, 68, 0.1)'] * len(row)
-                                    elif score > 70:
-                                        return ['background-color: rgba(251, 191, 36, 0.1)'] * len(row)
-                                except:
-                                    pass
-                                return [''] * len(row)
-                            styled_df = df.style.apply(highlight_trending, axis=1)
-                            
-                        elif analysis_type == "High Selling Products":
-                            df.columns = ["Top Selling Product", "Sales Rank", "Revenue", "Customer Rating", "Review Count"]
-                            # Highlight top performers
-                            def highlight_sellers(row):
-                                try:
-                                    rating = float(str(row['Customer Rating']).replace('⭐', '').split('/')[0])
-                                    if rating >= 4.5:
+                        # Check if DataFrame has any columns and rows before processing
+                        if len(df.columns) > 0 and len(df) > 0:
+                            # Analysis-specific column naming and formatting
+                            if analysis_type == "Market Gap":
+                                if len(df.columns) >= 5:
+                                    df.columns = ["Product/Opportunity", "Demand Score", "Competition Level", "Market Opportunity", "Est. Market Size"]
+                                # Highlight high opportunity rows
+                                def highlight_opportunities(row):
+                                    if 'High' in str(row.get('Market Opportunity', '')):
                                         return ['background-color: rgba(34, 197, 94, 0.1)'] * len(row)
-                                except:
-                                    pass
-                                return [''] * len(row)
-                            styled_df = df.style.apply(highlight_sellers, axis=1)
-                            
-                        elif analysis_type == "Competitor Analysis":
-                            df.columns = ["Competitor", "Market Share", "Key Strength", "Main Weakness", "Overall Rating"]
-                            # Highlight market leaders
-                            def highlight_leaders(row):
-                                try:
-                                    share = float(str(row['Market Share']).replace('%', ''))
-                                    if share > 25:
-                                        return ['background-color: rgba(99, 102, 241, 0.1)'] * len(row)
-                                except:
-                                    pass
-                                return [''] * len(row)
-                            styled_df = df.style.apply(highlight_leaders, axis=1)
-                        else:
-                            styled_df = df.style
+                                    return [''] * len(row)
+                                styled_df = df.style.apply(highlight_opportunities, axis=1)
+                                
+                            elif analysis_type == "Trending Products":
+                                if len(df.columns) >= 5:
+                                    df.columns = ["Trending Product", "Trend Score", "Growth Rate", "Interest Level", "Search Volume"]
+                                # Highlight high trend scores
+                                def highlight_trending(row):
+                                    try:
+                                        score = float(str(row.get('Trend Score', 0)).replace('%', '').replace('+', ''))
+                                        if score > 85:
+                                            return ['background-color: rgba(239, 68, 68, 0.1)'] * len(row)
+                                        elif score > 70:
+                                            return ['background-color: rgba(251, 191, 36, 0.1)'] * len(row)
+                                    except:
+                                        pass
+                                    return [''] * len(row)
+                                styled_df = df.style.apply(highlight_trending, axis=1)
+                                
+                            elif analysis_type == "High Selling Products":
+                                if len(df.columns) >= 5:
+                                    df.columns = ["Top Selling Product", "Sales Rank", "Revenue", "Customer Rating", "Review Count"]
+                                # Highlight top performers
+                                def highlight_sellers(row):
+                                    try:
+                                        rating = float(str(row.get('Customer Rating', 0)).replace('⭐', '').split('/')[0])
+                                        if rating >= 4.5:
+                                            return ['background-color: rgba(34, 197, 94, 0.1)'] * len(row)
+                                    except:
+                                        pass
+                                    return [''] * len(row)
+                                styled_df = df.style.apply(highlight_sellers, axis=1)
+                                
+                            elif analysis_type == "Competitor Analysis":
+                                if len(df.columns) >= 5:
+                                    df.columns = ["Competitor", "Market Share", "Key Strength", "Main Weakness", "Overall Rating"]
+                                # Highlight market leaders
+                                def highlight_leaders(row):
+                                    try:
+                                        share = float(str(row.get('Market Share', 0)).replace('%', ''))
+                                        if share > 25:
+                                            return ['background-color: rgba(99, 102, 241, 0.1)'] * len(row)
+                                    except:
+                                        pass
+                                    return [''] * len(row)
+                                styled_df = df.style.apply(highlight_leaders, axis=1)
+                            else:
+                                styled_df = df.style
 
-                        # Enhanced styling for numeric columns
-                        numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
-                        if len(numeric_cols) > 0:
-                            styled_df = styled_df.format(precision=2, subset=numeric_cols)
-                        
-                        st.dataframe(styled_df, use_container_width=True)
-                        
-                        # Analysis-specific data insights
-                        if analysis_type == "Market Gap" and len(df) > 0:
-                            high_opportunities = df[df['Market Opportunity'].str.contains('High', na=False)]
-                            st.success(f"🎯 Found {len(high_opportunities)} high-opportunity market gaps for {category}")
-                        elif analysis_type == "Trending Products" and len(df) > 0:
-                            st.info(f"📈 Tracking {len(df)} trending {category.lower()} with growth analysis")
-                        elif analysis_type == "High Selling Products" and len(df) > 0:
-                            st.info(f"💰 Analyzed {len(df)} top-selling {category.lower()} for performance insights")
-                        elif analysis_type == "Competitor Analysis" and len(df) > 0:
-                            st.info(f"🏆 Competitive analysis of {len(df)} key players in {category.lower()} market")
+                            # Enhanced styling for numeric columns
+                            numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
+                            if len(numeric_cols) > 0:
+                                styled_df = styled_df.format(precision=2, subset=numeric_cols)
+                            
+                            st.dataframe(styled_df, use_container_width=True)
+                            
+                            # Analysis-specific data insights
+                            if analysis_type == "Market Gap" and len(df) > 0:
+                                high_opportunities = df[df['Market Opportunity'].str.contains('High', na=False)]
+                                st.success(f"🎯 Found {len(high_opportunities)} high-opportunity market gaps for {category}")
+                            elif analysis_type == "Trending Products" and len(df) > 0:
+                                st.info(f"📈 Tracking {len(df)} trending {category.lower()} with growth analysis")
+                            elif analysis_type == "High Selling Products" and len(df) > 0:
+                                st.info(f"💰 Analyzed {len(df)} top-selling {category.lower()} for performance insights")
+                            elif analysis_type == "Competitor Analysis" and len(df) > 0:
+                                st.info(f"🏆 Competitive analysis of {len(df)} key players in {category.lower()} market")
+                        else:
+                            # Handle empty DataFrame case
+                            st.warning(f"⚠️ No data available for {analysis_type.lower()} table {idx + 1}")
+                            st.markdown(f"""<div style="padding: 1rem; background-color: rgba(251, 191, 36, 0.1); border-left: 4px solid #f59e0b; border-radius: 4px;">
+                                <p style="color: #e2e8f0; margin: 0;">📊 {analysis_type} data will be displayed when market analysis generates results for <strong>{category}</strong></p>
+                            </div>""", unsafe_allow_html=True)
                             
                     else:
                         st.json(table_data)
@@ -2341,26 +2353,40 @@ if st.session_state.result:
         with col2:
             # Download Table as CSV
             if result.get("tables") and len(result["tables"]) > 0:
-                df = pd.DataFrame(result["tables"][0])
-                analysis_type = st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')
-                if analysis_type == "Market Gap":
-                    df.columns = ["Product", "Demand Score", "Competition", "Opportunity", "Market Size"]
-                elif analysis_type == "Trending Products":
-                    df.columns = ["Product", "Trend Score", "Growth", "Interest Level", "Search Volume"]
-                elif analysis_type == "High Selling Products":
-                    df.columns = ["Product", "Sales Rank", "Revenue", "Rating", "Reviews"]
-                elif analysis_type == "Competitor Analysis":
-                    df.columns = ["Competitor", "Market Share", "Strength", "Weakness", "Rating"]
-                csv = df.to_csv(index=False)
-                filename_csv = f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.csv"
-                st.download_button(
-                    label="⬇️ Download Table (CSV)",
-                    data=csv,
-                    file_name=filename_csv,
-                    mime="text/csv",
-                    help="Download data table as CSV file",
-                    use_container_width=True
-                )
+                try:
+                    table_data = result["tables"][0]
+                    # Check if we have valid table data
+                    if isinstance(table_data, list) and len(table_data) > 0:
+                        df = pd.DataFrame(table_data)
+                        # Only proceed if DataFrame has data and columns
+                        if len(df) > 0 and len(df.columns) > 0:
+                            analysis_type = st.session_state.get('params', {}).get('analysis_type', 'Market Analysis')
+                            # Rename columns only if we have enough columns
+                            if analysis_type == "Market Gap" and len(df.columns) >= 5:
+                                df.columns = ["Product", "Demand Score", "Competition", "Opportunity", "Market Size"]
+                            elif analysis_type == "Trending Products" and len(df.columns) >= 5:
+                                df.columns = ["Product", "Trend Score", "Growth", "Interest Level", "Search Volume"]
+                            elif analysis_type == "High Selling Products" and len(df.columns) >= 5:
+                                df.columns = ["Product", "Sales Rank", "Revenue", "Rating", "Reviews"]
+                            elif analysis_type == "Competitor Analysis" and len(df.columns) >= 5:
+                                df.columns = ["Competitor", "Market Share", "Strength", "Weakness", "Rating"]
+                            
+                            csv = df.to_csv(index=False)
+                            filename_csv = f"market_analysis_{st.session_state.get('params', {}).get('category', 'unknown')}_{analysis_type.lower().replace(' ', '_')}.csv"
+                            st.download_button(
+                                label="⬇️ Download Table (CSV)",
+                                data=csv,
+                                file_name=filename_csv,
+                                mime="text/csv",
+                                help="Download data table as CSV file",
+                                use_container_width=True
+                            )
+                        else:
+                            st.info("📊 No table data available for download")
+                    else:
+                        st.info("📊 No table data available for download")
+                except Exception as e:
+                    st.warning(f"⚠️ Could not prepare CSV download: {str(e)}")
 
         with col3:
             # Download Chart as PNG

@@ -132,7 +132,7 @@ def process_market_data(raw_data: str, analysis_type: str, category: str, platfo
     """Extract structured data using Pydantic models - Enterprise version with enhanced processing"""
     if not llm:
         print("⚠️ LLM not available, using enterprise fallback data")
-        return generate_fallback_data(analysis_type, category)
+        return generate_enhanced_fallback_data(analysis_type, category, platform, region, time_period)
 
     # Select Pydantic model based on analysis_type
     if analysis_type.lower() == "market gap":
@@ -153,7 +153,7 @@ def process_market_data(raw_data: str, analysis_type: str, category: str, platfo
         table_fields = "competitor, market_share, strength, weakness, rating"
     else:
         print(f"⚠️ Unsupported analysis type: {analysis_type}. Using fallback.")
-        return generate_fallback_data("market gap", category)
+        return generate_enhanced_fallback_data("market gap", category, platform, region, time_period)
 
     parser = JsonOutputParser(pydantic_object=Model)
     extract_prompt = ChatPromptTemplate.from_template(
@@ -187,7 +187,7 @@ def process_market_data(raw_data: str, analysis_type: str, category: str, platfo
     
     # Enterprise fallback
     print(f"Using enterprise fallback data for {analysis_type}")
-    return generate_fallback_data(analysis_type, category)
+    return generate_enhanced_fallback_data(analysis_type, category, platform, region, time_period)
 
 def generate_analysis(data: List[Dict], analysis_type: str) -> Dict[str, Any]:
     """Generate summary and recommendations - Enterprise version with enhanced analysis"""
@@ -242,7 +242,12 @@ def create_analysis_chart(data: List[Dict], analysis_type: str, category: str = 
     """Create multiple professional charts - 15+ year data analyst approach with comprehensive analytics patterns"""
     try:
         if not data:
+            print(f"⚠️ create_analysis_chart: No data provided for {analysis_type}")
             return []
+
+        print(f"📊 create_analysis_chart: {analysis_type} with {len(data)} items")
+        if len(data) > 0:
+            print(f"📊 Sample data keys: {list(data[0].keys()) if data[0] else 'empty'}")
 
         # Analysis-specific multiple chart creation with professional analytics patterns
         if analysis_type.lower() == "market gap":
@@ -250,10 +255,12 @@ def create_analysis_chart(data: List[Dict], analysis_type: str, category: str = 
         elif analysis_type.lower() == "trending products":
             return create_trending_products_charts(data, category, platform, country, time_range)
         elif analysis_type.lower() == "high selling products":
+            print(f"📊 Routing to HIGH SELLING CHARTS with data: {[item.get('product', 'N/A') for item in data[:3]]}")
             return create_high_selling_charts(data, category, platform, country, time_range)
         elif analysis_type.lower() == "competitor analysis":
             return create_competitor_charts(data, category, platform, country, time_range)
         else:
+            print(f"⚠️ Unknown analysis type: {analysis_type}")
             return []
     except Exception as e:
         print(f"Enhanced multi-chart creation error: {e}")
@@ -264,11 +271,51 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
     charts = []
     
     try:
-        # Extract real product names instead of generic labels
-        product_names = [item["product"] for item in data]
-        demand_scores = [item["demand_score"] for item in data]
-        market_sizes = [float(item["market_size"].replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("M", "").replace("K", "")) for item in data]
-        opportunities = [item["opportunity"] for item in data]
+        # Debug: Log the incoming data to ensure we're using table data
+        print(f"📊 Market Gap Charts - Received data: {len(data) if data else 0} items")
+        if data and len(data) > 0:
+            print(f"📊 Sample market gap products: {[item.get('product', 'N/A') for item in data[:3]]}")
+        
+        # Use real product names from data - EXACTLY THE SAME AS TABLE DATA
+        if data and len(data) > 0:
+            product_names = [item["product"] for item in data]
+            demand_scores = [float(item.get("demand_score", 5.0)) for item in data]
+            
+            # Handle market_size field - clean currency symbols and convert to numbers
+            market_sizes = []
+            for item in data:
+                market_size_str = str(item.get("market_size", "1.0M"))
+                # Remove currency symbols and M/K suffixes, then convert to numbers
+                size_clean = market_size_str.replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("M", "").replace("K", "")
+                try:
+                    size_val = float(size_clean)
+                    if "M" in market_size_str:
+                        size_val = size_val  # Already in millions
+                    elif "K" in market_size_str:
+                        size_val = size_val / 1000  # Convert K to millions
+                    market_sizes.append(size_val)
+                except:
+                    market_sizes.append(1.5)  # Default 1.5M if parsing fails
+            
+            opportunities = [item.get("opportunity", "Medium") for item in data]
+            competition_levels = [item.get("competition", "Medium") for item in data]
+            
+        else:
+            # Fallback with actual market gap product names
+            print(f"⚠️ Using FALLBACK data for Market Gap {category}")
+            category_products = {
+                "smart home devices": ["Smart Door Lock Pro", "WiFi Security Camera 4K", "Voice Assistant Hub", "Smart Thermostat Pro", "Wireless Doorbell HD"],
+                "electronics": ["Wireless Charging Pad Fast", "Bluetooth Speaker Waterproof", "USB-C Hub Multi-Port", "Power Bank 20000mAh", "Noise Cancelling Earbuds"],
+                "fitness equipment": ["Smart Yoga Mat", "Resistance Loop Bands Pro", "Adjustable Kettlebell Set", "Foam Roller with App", "Smart Jump Rope LED"],
+                "kitchen appliances": ["Smart Coffee Maker WiFi", "Air Fryer Oven Combo", "Smart Blender App Control", "Induction Cooktop Portable", "Food Vacuum Sealer Pro"],
+                "wireless headphones": ["True Wireless Earbuds Pro", "Over-Ear Headphones Studio", "Sport Headphones Waterproof", "Gaming Headset RGB", "Bone Conduction Headphones"]
+            }
+            product_names = category_products.get(category.lower(), [f"{category} Gap Opportunity #{i+1}" for i in range(5)])
+            demand_scores = [8.5, 7.8, 7.2, 6.5, 8.0]
+            market_sizes = [2.5, 1.8, 1.2, 0.8, 1.5]
+            opportunities = ["High", "High", "Medium", "Low", "High"]
+            competition_levels = ["Medium", "Low", "Medium", "High", "Low"]
+            print(f"📊 Using FALLBACK products: {product_names[:3]}")
         
         # E-commerce seller color coding: Green = High Profit, Yellow = Medium Risk, Red = Avoid
         colors = ['#22c55e' if opp == "High" else '#f59e0b' if opp == "Medium" else '#ef4444' for opp in opportunities]
@@ -325,7 +372,7 @@ def create_market_gap_charts(data: List[Dict], category: str, platform: str, cou
         charts.append(fig2.to_json())
         
         # Chart 3: Seller Competition Assessment (Easy vs Hard Markets)
-        competition_scores = [3 if item["competition"] == "High" else 2 if item["competition"] == "Medium" else 1 for item in data]
+        competition_scores = [3 if comp == "High" else 2 if comp == "Medium" else 1 for comp in competition_levels]
         
         fig3 = go.Figure()
         fig3.add_trace(go.Bar(
@@ -465,27 +512,70 @@ def create_high_selling_charts(data: List[Dict], category: str, platform: str, c
     charts = []
     
     try:
-        # Use real product names from data
+        # Debug: Log the incoming data to ensure we're using table data
+        print(f"📊 High Selling Charts - Received data: {len(data) if data else 0} items")
         if data and len(data) > 0:
-            product_names = [item["product"] for item in data]
-            sales_volumes = [item.get("sales_rank", i+1) * 1000 for i, item in enumerate(data)]
-            revenues = [float(item["revenue"].replace("$", "").replace("€", "").replace("£", "").replace("M", "")) * 1000000 for item in data]
-            ratings = [item["rating"] for item in data]
-            review_counts = [int(item["reviews"].replace(",", "").replace("K", "")) * 1000 if "K" in item["reviews"] else int(item["reviews"].replace(",", "")) for item in data]
-        else:
+            print(f"📊 Sample product names: {[item.get('product', 'N/A') for item in data[:3]]}")
+        
+        # Use real product names from data - EXACTLY THE SAME AS TABLE DATA
+        if data and len(data) > 0:
+            # Validate that we have meaningful data (not just empty dictionaries)
+            if data[0] and len(data[0]) > 1 and 'product' in data[0]:
+                product_names = [item["product"] for item in data]
+                sales_volumes = [item.get("sales_rank", i+1) * 1000 for i, item in enumerate(data)]
+                
+                # Handle revenue field - clean currency symbols and convert to numbers
+                revenues = []
+                for item in data:
+                    revenue_str = str(item.get("revenue", "0"))
+                    # Remove currency symbols and M/K suffixes, then convert to numbers
+                    revenue_clean = revenue_str.replace("$", "").replace("€", "").replace("£", "").replace("M", "").replace("K", "")
+                    try:
+                        revenue_val = float(revenue_clean)
+                        if "M" in revenue_str:
+                            revenue_val *= 1000000
+                        elif "K" in revenue_str:
+                            revenue_val *= 1000
+                        revenues.append(revenue_val)
+                    except:
+                        revenues.append(1000000)  # Default 1M if parsing fails
+                
+                ratings = [float(item.get("rating", 4.0)) for item in data]
+                
+                # Handle reviews field - clean comma and K suffixes
+                review_counts = []
+                for item in data:
+                    reviews_str = str(item.get("reviews", "1000"))
+                    reviews_clean = reviews_str.replace(",", "").replace("K", "")
+                    try:
+                        review_val = int(reviews_clean)
+                        if "K" in reviews_str:
+                            review_val *= 1000
+                        review_counts.append(review_val)
+                    except:
+                        review_counts.append(1000)  # Default 1000 if parsing fails
+                        
+                print(f"📊 Using REAL table data with products: {product_names[:3]}")
+            else:
+                # Data exists but is empty/invalid - use fallback
+                print(f"⚠️ Data is empty or invalid, using fallback for {category}")
+                data = []
+        
+        if not data or len(data) == 0:
             # Fallback with actual best-selling product names
-            category_bestsellers = {
+            category_products = {
                 "smart home devices": ["Amazon Echo Dot (4th Gen)", "Ring Video Doorbell Pro", "Philips Hue White Starter Kit", "Google Nest Hub (2nd Gen)", "TP-Link Kasa Smart Plug"],
                 "electronics": ["Apple AirPods Pro (2nd Gen)", "Samsung Galaxy Buds2 Pro", "Sony WH-1000XM5 Headphones", "Apple iPad (10th Gen)", "Anker PowerCore 10000"],
                 "fitness equipment": ["Bowflex SelectTech 552 Dumbbells", "Resistance Bands Set (11pcs)", "Yoga Mat Premium TPE", "Foam Roller High Density", "Adjustable Weight Bench"],
                 "kitchen appliances": ["Ninja AF101 Air Fryer", "Keurig K-Mini Coffee Maker", "Instant Pot Duo 7-in-1", "Vitamix E310 Explorian", "Breville BOV845BSS Smart Oven"],
                 "wireless headphones": ["Apple AirPods (3rd Gen)", "Sony WF-1000XM4 Earbuds", "Bose QuietComfort Earbuds", "Jabra Elite 85t Earbuds", "Sennheiser Momentum 4 Wireless"]
             }
-            product_names = category_bestsellers.get(category.lower(), [f"{category} Top Seller #{i+1}" for i in range(5)])
+            product_names = category_products.get(category.lower(), [f"{category} Top Seller #{i+1}" for i in range(5)])
             sales_volumes = [15420, 12680, 9850, 8240, 6730]
             revenues = [847500, 692400, 541750, 453200, 370150]
             ratings = [4.8, 4.6, 4.5, 4.3, 4.1]
             review_counts = [2340, 1890, 1520, 1180, 890]
+            print(f"📊 Using FALLBACK data with products: {product_names[:3]}")
         
         # Chart 1: 💰 Seller Revenue Matrix (Sales Volume vs Revenue - What Makes Money)
         fig1 = go.Figure()
@@ -1196,13 +1286,22 @@ def create_fallback_chart(data: List[Dict], analysis_type: str, category: str = 
 def create_fallback_charts(data: List[Dict], analysis_type: str, category: str = "products", platform: str = "platform", country: str = "market", time_range: str = "period") -> List[str]:
     """Create multiple fallback charts with enhanced user-specific data when primary chart generation fails"""
     try:
-        if not data:
+        print(f"⚠️ Creating fallback charts for {analysis_type} - {category}")
+        
+        if not data or len(data) == 0:
             # Generate enhanced, user-specific fallback data
+            print(f"🔄 Generating enhanced fallback data for {analysis_type}")
             data = generate_enhanced_fallback_data(analysis_type, category, platform, country, time_range)
         
-        # Use the enhanced multi-chart creation logic with user parameters
-        charts = create_analysis_chart(data, analysis_type, category, platform, country, time_range)
-        return charts if charts else ['{}']
+        # Validate the generated data has the minimum required structure
+        if data and len(data) > 0 and isinstance(data[0], dict) and len(data[0]) > 1:
+            print(f"✅ Using {len(data)} fallback items with keys: {list(data[0].keys())[:3]}")
+            # Use the enhanced multi-chart creation logic with user parameters
+            charts = create_analysis_chart(data, analysis_type, category, platform, country, time_range)
+            return charts if charts else ['{}'] 
+        else:
+            print(f"⚠️ Fallback data generation failed for {analysis_type}")
+            return ['{}']  # Empty chart as last resort
     except Exception as e:
         print(f"Enhanced fallback charts creation error: {e}")
         # Return empty chart JSON list as last resort
@@ -1254,16 +1353,18 @@ def extract_node(state: AgentState) -> AgentState:
             state["time_period"]
         )
         
-        # Ensure we always have valid data structure
-        if not extracted_data or len(extracted_data) == 0:
+        # Ensure we always have valid data structure with minimum requirements
+        if not extracted_data or len(extracted_data) == 0 or (isinstance(extracted_data, list) and len(extracted_data[0]) <= 1):
             # Generate enterprise-level fallback data
-            extracted_data = generate_fallback_data(state["analysis_type"], state["category"])
+            print(f"⚠️ Extract node: Empty/invalid data, generating fallback for {state['analysis_type']} - {state['category']}")
+            extracted_data = generate_enhanced_fallback_data(state["analysis_type"], state["category"], state["platform"], state["region"], state["time_period"])
+            print(f"🔄 Generated {len(extracted_data)} fallback items for {state['analysis_type']}")
         
         return {"extracted_data": extracted_data, "next": "analyze"}
     
     except Exception as e:
         print(f"Extract node error: {e}. Using enterprise fallback.")
-        extracted_data = generate_fallback_data(state["analysis_type"], state["category"])
+        extracted_data = generate_enhanced_fallback_data(state["analysis_type"], state["category"], state["platform"], state["region"], state["time_period"])
         return {"extracted_data": extracted_data, "next": "analyze"}
 
 def analyze_node(state: AgentState) -> AgentState:
@@ -1297,9 +1398,16 @@ def visualize_node(state: AgentState) -> AgentState:
         time_period = state.get("time_period", "period")
         analysis_type = state.get("analysis_type", "market analysis")
         
+        # Debug: Log the data being passed to charts
+        extracted_data = state["extracted_data"]
+        print(f"📊 VISUALIZATION NODE - Analysis: {analysis_type}")
+        print(f"📊 Data for charts: {len(extracted_data) if extracted_data else 0} items")
+        if extracted_data and len(extracted_data) > 0:
+            print(f"📊 Sample products for charts: {[item.get('product', 'N/A') for item in extracted_data[:3]]}")
+        
         # Create multiple enhanced charts with user parameters
         charts = create_analysis_chart(
-            state["extracted_data"], 
+            extracted_data, 
             analysis_type, 
             category, 
             platform, 
@@ -1309,8 +1417,9 @@ def visualize_node(state: AgentState) -> AgentState:
         
         # Ensure we always have charts for enterprise users
         if not charts or len(charts) == 0:
+            print(f"⚠️ No charts generated, creating fallback charts for {analysis_type}")
             charts = create_fallback_charts(
-                state["extracted_data"], 
+                extracted_data, 
                 analysis_type, 
                 category, 
                 platform, 
@@ -1318,6 +1427,7 @@ def visualize_node(state: AgentState) -> AgentState:
                 time_period
             )
         
+        print(f"✅ Generated {len(charts)} charts for {analysis_type}")
         return {"chart": charts, "next": "supervisor"}
     
     except Exception as e:
@@ -1472,13 +1582,25 @@ def agent_orchestrator(inputs: Dict[str, Any]) -> Dict[str, Any]:
         final_state = workflow.invoke(state)  # NO recursion limits - direct execution
         print("✅ Seller-focused workflow completed successfully")
         
+        # Debug: Log the final state data to ensure consistency
+        extracted_data = final_state.get("extracted_data", [])
+        print(f"📊 AGENT ORCHESTRATOR - Final extracted data: {len(extracted_data) if extracted_data else 0} items")
+        if extracted_data and len(extracted_data) > 0:
+            print(f"📊 Final products for BOTH tables and charts: {[item.get('product', 'N/A') for item in extracted_data[:3]]}")
+        
         result = {
             "summary": final_state["analysis"].get("summary", "E-commerce seller analysis completed with real market data."),
-            "tables": [final_state["extracted_data"]],
+            "tables": [extracted_data],  # Use extracted_data directly (same as charts)
             "charts": final_state["chart"] if isinstance(final_state["chart"], list) else [final_state["chart"]] if final_state["chart"] else [],
             "recommendations": final_state["analysis"].get("recommendations", ""),
             "status": "✅ Seller-focused analysis complete - Multiple professional charts with real product names generated"
         }
+        
+        # Debug: Confirm tables and charts use same data
+        if result["tables"] and len(result["tables"]) > 0 and result["tables"][0]:
+            table_sample = [item.get('product', 'N/A') for item in result["tables"][0][:3]]
+            print(f"📊 RESULT - Tables will display: {table_sample}")
+        print(f"📊 RESULT - Generated {len(result['charts'])} charts using SAME data")
 
         save_results_tool(result)
         return result
